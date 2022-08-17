@@ -13,6 +13,7 @@ const ping = async host => {
 const app = new express();
 
 app.get("/", async (req, res) => {
+    if(!fs.existsSync("data.json")) fs.writeFileSync("data.json", "[]");
     const addresses = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}))
 
     const timeoutDelay = 60000;
@@ -56,6 +57,7 @@ app.get("/", async (req, res) => {
         document.getElementById("eta").innerHTML = "Next scheduled check: " + new Date(date.getTime() + ${timeoutDelay});
         addresses.forEach(async a => {
         const b = document.getElementById(a + "_status");
+        if(!b) return;
         b.innerHTML = '<span style="color:blue;">PINGING...</span>'
         await fetch('http://localhost:8080/ping/' + a)
         .then((response) => response.json())
@@ -100,6 +102,7 @@ app.get("/ping/:ip", async (req, res) => {
 });
 
 app.get("/addIP/:ip", async (req, res) => {
+    if(!fs.existsSync("data.json")) fs.writeFileSync("data.json", "[]");
     const json = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}));
 
     json.push(req.params.ip);
@@ -112,6 +115,7 @@ app.get("/addIP/:ip", async (req, res) => {
 });
 
 app.get("/removeIP/:ip", async (req, res) => {
+    if(!fs.existsSync("data.json")) fs.writeFileSync("data.json", "[]");
     const json = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}));
 
     json.splice(json.indexOf(req.params.ip.toString()), 1)
