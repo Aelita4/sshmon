@@ -1,8 +1,8 @@
-const express = require('express');
-const Ping = require('ping');
-const fs = require('fs');
+import express, { Request, Response } from 'express';
+import * as Ping from 'ping';
+import * as fs from 'fs';
 
-const ping = async host => {
+const ping = async (host: string) => {
     const result = await Ping.promise.probe(host, {
         timeout: 2,
         extra: ["-i", "2"],
@@ -10,17 +10,17 @@ const ping = async host => {
     return result;
 }
 
-const app = new express();
+const app = express();
 
 const pings = new Map();
 
-if(!fs.existsSync("data.json")) fs.writeFileSync("data.json", "[]");
-let addresses = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}))
-addresses.forEach(a => pings.set(a, -1));
+if(!fs.existsSync("../data.json")) fs.writeFileSync("../data.json", "[]");
+let addresses = JSON.parse(fs.readFileSync("../data.json", {encoding:'utf8', flag:'r'}))
+addresses.forEach((a: string) => pings.set(a, -1));
 const timeoutDelay = 60000;
 
-app.get("/", async (req, res) => {
-    addresses = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}))
+app.get("/", async (req: Request, res: Response) => {
+    addresses = JSON.parse(fs.readFileSync("../data.json", {encoding:'utf8', flag:'r'}))
     let out = `<html><head><script>const addresses = ["${addresses.join('", "')}"];
     function clock() {
         
@@ -83,7 +83,7 @@ app.get("/", async (req, res) => {
     </script></head><body><div id="time">12:00:00</div><div id="main"></div><div id="eta"></div><br />
     <input type="text" name="ipaddr" id="ipaddr" value=""><input type="submit" id="but" name="but" value="Add" onClick="addIP()"><br /><br /><div id="addresses"><table id="tab">`;
 
-    addresses.forEach(a => {
+    addresses.forEach((a: string) => {
         out += `<div id="${a}_main"><tr><td><input type="button" name="${a}_rem" value="x" onClick="removeIP('${a}')"></td><td><div style="display: inline-block;" id="${a}_addr">${a}</div></td><td><div style="display: inline-block; margin-left: 5em" id="${a}_status"><span>WAITING</span></div></td></tr></div>`;
     })
 
@@ -98,7 +98,7 @@ app.get("/", async (req, res) => {
     res.send(out);
 });
 
-app.get("/ping/:ip", async (req, res) => {
+app.get("/ping/:ip", async (req: Request, res: Response) => {
     const ip = req.params.ip;
     const r = await ping(ip);
     if(!r.alive && pings.get(ip) === -1) pings.set(ip, Date.now());
@@ -107,7 +107,7 @@ app.get("/ping/:ip", async (req, res) => {
     res.end(JSON.stringify(r));
 });
 
-app.get("/downtime/:ip", async (req, res) => {
+app.get("/downtime/:ip", async (req: Request, res: Response) => {
     const ip = req.params.ip;
 
     const json = { downSince: pings.get(ip) };
@@ -116,29 +116,30 @@ app.get("/downtime/:ip", async (req, res) => {
     res.end(JSON.stringify(json));
 });
 
-app.get("/addIP/:ip", async (req, res) => {
-    if(!fs.existsSync("data.json")) fs.writeFileSync("data.json", "[]");
-    const json = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}));
+app.get("/addIP/:ip", async (req: Request, res: Response) => {
+    if(!fs.existsSync("../data.json")) fs.writeFileSync("../data.json", "[]");
+    const json = JSON.parse(fs.readFileSync("../data.json", {encoding:'utf8', flag:'r'}));
 
     json.push(req.params.ip);
 
 
-    fs.writeFileSync("./data.json", JSON.stringify(json))
+    fs.writeFileSync("../data.json", JSON.stringify(json))
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ status: "OK" }));
 });
 
-app.get("/removeIP/:ip", async (req, res) => {
-    if(!fs.existsSync("data.json")) fs.writeFileSync("data.json", "[]");
-    const json = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}));
+app.get("/removeIP/:ip", async (req: Request, res: Response) => {
+    if(!fs.existsSync("../data.json")) fs.writeFileSync("../data.json", "[]");
+    const json = JSON.parse(fs.readFileSync("../data.json", {encoding:'utf8', flag:'r'}));
 
     json.splice(json.indexOf(req.params.ip.toString()), 1)
 
-    fs.writeFileSync("./data.json", JSON.stringify(json))
+    fs.writeFileSync("../data.json", JSON.stringify(json))
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ status: "OK" }));
 });
 
+app.set('view engine', 'ejs');
 app.listen(8080, () => console.log('rdy'));
