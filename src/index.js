@@ -12,12 +12,15 @@ const ping = async host => {
 
 const app = new express();
 
-app.get("/", async (req, res) => {
-    if(!fs.existsSync("data.json")) fs.writeFileSync("data.json", "[]");
-    const addresses = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}))
+const pings = new Map();
 
-    const timeoutDelay = 60000;
-    
+if(!fs.existsSync("data.json")) fs.writeFileSync("data.json", "[]");
+let addresses = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}))
+addresses.forEach(a => pings.set(a, -1));
+const timeoutDelay = 60000;
+
+app.get("/", async (req, res) => {
+    addresses = JSON.parse(fs.readFileSync("./data.json", {encoding:'utf8', flag:'r'}))
     let out = `<html><head><script>const addresses = ["${addresses.join('", "')}"];
     function clock() {
         
@@ -61,8 +64,8 @@ app.get("/", async (req, res) => {
         b.innerHTML = '<span style="color:blue;">PINGING...</span>'
         await fetch('http://localhost:8080/ping/' + a)
         .then((response) => response.json())
-        .then((data) => {
-            b.innerHTML = data.alive ? '<span style="color:green;">UP (' + data.numeric_host + ") " + data.time + 'ms</span>' : '<span style="color:red;">DOWN' + ((data.host == "unknown") ? " (UNKNOWN HOST)" : (" (" + data.numeric_host + ")")) + '</span>'
+        .then(async (data) => {
+            b.innerHTML = data.alive ? '<span style="color:green;">UP (' + data.numeric_host + ") " + data.time + 'ms</span>' : '<span style="color:red;">DOWN' + ((data.host == "unknown") ? " (UNKNOWN HOST)" : (" (" + data.numeric_host + ")")) + " since " + new Date((await (await fetch('http://localhost:8080/downtime/' + a)).json()).downSince) + '</span>'
         });
         
     })
@@ -96,9 +99,21 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/ping/:ip", async (req, res) => {
-    const r = await ping(req.params.ip);
+    const ip = req.params.ip;
+    const r = await ping(ip);
+    if(!r.alive && pings.get(ip) === -1) pings.set(ip, Date.now());
+    else if(r.alive) pings.set(ip, -1);
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(r));
+});
+
+app.get("/downtime/:ip", async (req, res) => {
+    const ip = req.params.ip;
+
+    const json = { downSince: pings.get(ip) };
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(json));
 });
 
 app.get("/addIP/:ip", async (req, res) => {
