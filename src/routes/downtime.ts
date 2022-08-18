@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 module.exports = {
+    method: "GET",
     url: "/downtime/:ip",
     callback: async (data: any, req: Request, res: Response) => {
         const ip = req.params.ip;

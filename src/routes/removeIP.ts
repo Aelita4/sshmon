@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { existsSync, writeFileSync, readFileSync } from 'fs'
 
 module.exports = {
+    method: "GET",
     url: "/removeIP/:ip",
     callback: async (data: any, req: Request, res: Response) => {
         if(!existsSync("../data.json")) writeFileSync("../data.json", "[]");

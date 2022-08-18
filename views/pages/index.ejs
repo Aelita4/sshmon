@@ -2,12 +2,7 @@
     <head>
         <script>
         const addresses = ["<%- addresses.join(`", \"`) %>"];
-        function clock() {
-            
-            const x = new Date();
 
-            document.getElementById("time").innerHTML = String(x.getHours()).padStart(2, '0') + ":" + String(x.getMinutes()).padStart(2, '0') + ":" + String(x.getSeconds()).padStart(2, '0');
-        }
 
         async function addIP() {
             const addrElement = document.getElementById("addresses");
@@ -51,18 +46,11 @@
         setTimeout(aaa, <%= timeoutDelay %>)
         }
 
-        window.onload = async () => {
-            const x = new Date();
-            document.getElementById("time").innerHTML = String(x.getHours()).padStart(2, '0') + ":" + String(x.getMinutes()).padStart(2, '0') + ":" + String(x.getSeconds()).padStart(2, '0');
-            
-            const clockRefresh = 1000;
-            aaa();
-            setInterval(clock, clockRefresh);
-        }
+        window.onload = aaa;
     </script>
 </head>
 <body>
-    <div id="time">12:00:00</div>
+    <%- include("../partials/navbar.ejs", { activeLink: "home", username, loggedIn }) %>
     <div id="main"></div>
     <div id="eta"></div><br />
     <input type="text" name="ipaddr" id="ipaddr" value="">
