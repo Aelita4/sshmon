@@ -5,13 +5,13 @@ module.exports = {
     method: "GET",
     url: "/addIP/:ip",
     callback: async (data: any, req: Request, res: Response) => {
-        if(!existsSync("../data.json")) writeFileSync("../data.json", "[]");
-        const json = JSON.parse(readFileSync("../data.json", {encoding:'utf8', flag:'r'}));
+        if(!existsSync("/usr/src/app/data.json")) writeFileSync("/usr/src/app/data.json", "[]");
+        const json = JSON.parse(readFileSync("/usr/src/app/data.json", {encoding:'utf8', flag:'r'}));
     
         json.push(req.params.ip);
     
     
-        writeFileSync("../data.json", JSON.stringify(json))
+        writeFileSync("/usr/src/app/data.json", JSON.stringify(json))
     
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ status: "OK" }));

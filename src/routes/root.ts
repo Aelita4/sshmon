@@ -5,7 +5,7 @@ module.exports = {
     method: "GET",
     url: "/",
     callback: async (data: any, req: Request, res: Response) => {
-        data.addresses = JSON.parse(readFileSync("../data.json", {encoding:'utf8', flag:'r'}));
+        data.addresses = JSON.parse(readFileSync("/usr/src/app/data.json", {encoding:'utf8', flag:'r'}));
         //@ts-ignore
         if(!req.session.user) res.redirect("/login");
         else res.render('pages/index.ejs', {

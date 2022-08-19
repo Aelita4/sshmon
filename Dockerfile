@@ -8,8 +8,10 @@ RUN npm ci
 
 COPY data.json .
 
-COPY out .
+COPY views views
+
+COPY out out
 
 EXPOSE 8080
 
-CMD ["node", "index.js"]
+CMD ["node", "out/index.js"]

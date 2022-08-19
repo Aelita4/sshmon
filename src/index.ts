@@ -15,7 +15,7 @@ const ping = async (host: string) => {
 }
 
 const connection = mysql.createConnection({
-    host: "localhost",
+    host: "mysql",
     user: "root",
     password: "root",
     database: "sshmon"
@@ -38,14 +38,14 @@ app.use(express.urlencoded());
 
 const pings = new Map();
 
-if(!existsSync("../data.json")) writeFileSync("../data.json", "[]");
-let addresses = JSON.parse(readFileSync("../data.json", {encoding:'utf8', flag:'r'}))
+if(!existsSync("/usr/src/app/data.json")) writeFileSync("/usr/src/app/data.json", "[]");
+let addresses = JSON.parse(readFileSync("/usr/src/app/data.json", {encoding:'utf8', flag:'r'}))
 addresses.forEach((a: string) => pings.set(a, -1));
 const timeoutDelay = 60000;
 
-const routes = readdirSync("./routes");
+const routes = readdirSync(__dirname + "/routes");
 routes.forEach(route => {
-    const file = require(`./routes/${route}`);
+    const file = require(`${__dirname}/routes/${route}`);
     console.log(`[${file.method}] ${file.url}`);
     switch(file.method) {
         case "GET": app.get(file.url, file.callback.bind(null, { addresses, ping, pings, timeoutDelay })); break;
