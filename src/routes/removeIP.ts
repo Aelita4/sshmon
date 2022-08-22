@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { existsSync, writeFileSync, readFileSync } from 'fs'
 import { connection } from '../index.js';
 
 export default {
@@ -20,8 +19,5 @@ export default {
                 });
             }
         });
-    
-        /*res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ status: "OK" }));*/
     }
 }

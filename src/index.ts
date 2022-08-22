@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import Ping from 'ping';
-import { existsSync, readdirSync, writeFileSync, readFileSync } from 'fs';
+import { readdirSync } from 'fs';
 import sessions from "express-session"
 import cookieParser from "cookie-parser"
 import mysql from 'mysql'

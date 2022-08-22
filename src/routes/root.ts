@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { readFileSync } from 'fs';
 import { getIP } from '../index.js';
 
 export default {

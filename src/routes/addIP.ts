@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { existsSync, writeFileSync, readFileSync } from 'fs'
 import { connection } from '../index.js';
 
 export default {

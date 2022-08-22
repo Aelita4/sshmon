@@ -12,13 +12,7 @@
             addrElement.innerHTML += '<div id="' + ip + '_main"><tr><td><input type="button" name="' + ip + '_rem" value="x" onClick="removeIP(\"' + ip + '\")"></td><td><div style="display: inline-block;" id="' + ip + '_addr">' + ip + '</div></td><td><div style="display: inline-block; margin-left: 5em" id="' + ip + '_status"><span style="color:blue;">PINGING...</span></div></td></tr></div>'
             const b = document.getElementById(ip + "_status");
             await fetch('http://localhost:8080/addIP/' + ip)
-            window.location.reload(true);
-            /*await fetch('http://localhost:8080/ping/' + ip)
-            .then((response) => response.json())
-            .then((data) => {
-                b.innerHTML = data.alive ? '<span style="color:green;">UP (' + data.numeric_host + ") " + data.time + 'ms</span>' : '<span style="color:red;">DOWN' + ((data.host == "unknown") ? " (UNKNOWN HOST)" : (" (" + data.numeric_host + ")")) + '</span>'
-            });*/
-            
+            window.location.reload(true);           
         }
 
         async function removeIP(ip) {
