@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { connection, bcrypt } from '../index'
+import { connection, bcrypt } from '../index.js'
 
-module.exports = {
+export default {
     method: "POST",
     url: "/loginUser",
     callback: async (data: any, req: Request, res: Response) => {
@@ -17,6 +17,8 @@ module.exports = {
                     session.user = {}
                     //@ts-ignore
                     session.user.username = req.body.username;
+
+                    session.save();
         
                     res.redirect("/");
                 } else res.render("pages/login.ejs", { invalid: "baduserorpass" });

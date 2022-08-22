@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { existsSync, writeFileSync, readFileSync } from 'fs'
 
-module.exports = {
+export default {
     method: "GET",
     url: "/addIP/:ip",
     callback: async (data: any, req: Request, res: Response) => {

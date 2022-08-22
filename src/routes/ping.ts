@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-module.exports = {
+export default {
     method: "GET",
     url: "/ping/:ip",
     callback: async (data: any, req: Request, res: Response) => {

@@ -1,7 +1,7 @@
-import e, { Request, Response } from 'express';
-import { connection, bcrypt } from '../index'
+import { Request, Response } from 'express';
+import { connection, bcrypt } from '../index.js'
 
-module.exports = {
+export default {
     method: "POST",
     url: "/registerUser",
     callback: async (data: any, req: Request, res: Response) => {
