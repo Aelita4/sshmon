@@ -6,9 +6,7 @@ export default {
     method: "GET",
     url: "/",
     callback: async (data: any, req: Request, res: Response) => {
-        const tmp = await getIP();
-        //@ts-ignore
-        data.addresses = tmp.map(a => a.ip);
+        data.addresses = await getIP();
         //@ts-ignore
         if(!req.session.user) res.redirect("/login");
         else res.render('pages/index.ejs', {

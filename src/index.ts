@@ -21,7 +21,7 @@ const getIP = () : Promise<string[]> => {
     return new Promise((resolve, reject) => {
         connection.query("SELECT * FROM ips", async (err, results, fields) => {
             if(err) reject(err);
-            const addresses = [...results.slice()];
+            const addresses = [...results.slice()].map(a => a.ip);
     
             resolve(addresses);
         });
@@ -54,7 +54,7 @@ const pings = new Map();
 
 let addresses: Array<string> = await getIP();
 
-addresses.forEach((a: string) => pings.set(a, -1));
+addresses.forEach((a: string) => pings.set(a, `${Date.now()}_1`));
 const timeoutDelay = 60000;
 
 const routes = readdirSync(__dirname + "/routes");

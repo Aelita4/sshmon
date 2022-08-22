@@ -40,7 +40,7 @@
                 await fetch('http://localhost:8080/ping/' + a)
                 .then((response) => response.json())
                 .then(async (data) => {
-                    b.innerHTML = data.alive ? '<span style="color:green;">UP (' + data.numeric_host + ") " + data.time + 'ms</span>' : '<span style="color:red;">DOWN' + ((data.host == "unknown") ? " (UNKNOWN HOST)" : (" (" + data.numeric_host + ")")) + " since " + new Date((await (await fetch('http://localhost:8080/downtime/' + a)).json()).downSince) + '</span>'
+                    b.innerHTML = data.alive ? '<span style="color:green;">UP (' + data.numeric_host + ") " + data.time + 'ms</span>' : '<span style="color:red;">DOWN' + ((data.host == "unknown") ? " (UNKNOWN HOST)" : (" (" + data.numeric_host + ")")) + " since " + new Date(Number((await (await fetch('http://localhost:8080/downtime/' + a)).json()).downSince)) + '</span>'
                 });
             })
         setTimeout(aaa, <%= timeoutDelay %>)
