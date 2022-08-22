@@ -14,12 +14,10 @@
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "ejs": "^3.1.8",
-    "eslint": "^8.22.0",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
     "mysql": "^2.18.1",
-    "ping": "^0.4.2",
-    "typescript": "^4.7.4"
+    "ping": "^0.4.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -28,6 +26,8 @@
     "@types/express-session": "^1.17.5",
     "@types/mysql": "^2.15.21",
     "@types/node": "^18.7.6",
-    "@types/ping": "^0.4.1"
+    "@types/ping": "^0.4.1",
+    "eslint": "^8.22.0",
+    "typescript": "^4.7.4"
   }
 }
