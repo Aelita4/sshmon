@@ -6,8 +6,6 @@ COPY package*.json ./
 
 RUN npm ci
 
-COPY data.json .
-
 COPY views views
 
 COPY out out

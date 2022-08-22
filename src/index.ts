@@ -7,7 +7,6 @@ import mysql from 'mysql'
 import bcrypt from 'bcrypt'
 import url from 'url';
 
-//const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const ping = async (host: string) => {
@@ -55,8 +54,6 @@ const pings = new Map();
 
 let addresses: Array<string> = await getIP();
 
-//if(!existsSync("/usr/src/app/data.json")) writeFileSync("/usr/src/app/data.json", "[]");
-//let addresses = JSON.parse(readFileSync("/usr/src/app/data.json", {encoding:'utf8', flag:'r'}))
 addresses.forEach((a: string) => pings.set(a, -1));
 const timeoutDelay = 60000;
 
