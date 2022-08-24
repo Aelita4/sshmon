@@ -12,7 +12,7 @@
 
 3. Create database and tables
 - Script does not create database and tables by default
-  - Create database `sshmon` with 2 tables: 
+  - Create database `sshmon` with 3 tables: 
     <table>
         <thead>
             <tr>
@@ -61,6 +61,40 @@
             </tr>
             <tr>
                 <td>password</td>
+                <td>varchar(255)</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th colspan=3>downtime</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Name</td>
+                <td>Type</td>
+                <td>Extra</td>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>int</td>
+                <td>AUTO_INCREMENT PRIMARY KEY</td>
+            </tr>
+            <tr>
+                <td>ip</td>
+                <td>varchar(255)</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>time</td>
+                <td>datetime</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>status</td>
                 <td>varchar(255)</td>
                 <td></td>
             </tr>
