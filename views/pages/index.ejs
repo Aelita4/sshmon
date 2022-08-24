@@ -25,8 +25,8 @@
         
         async function aaa() {
             const date = new Date();
-            document.getElementById("main").innerHTML = "Last checked: " + date;
-            document.getElementById("eta").innerHTML = "Next scheduled check: " + new Date(date.getTime() + <%= timeoutDelay %>);
+            document.getElementById("main").innerHTML = "Last checked: " + date.toLocaleString();
+            document.getElementById("eta").innerHTML = "Next scheduled check: " + new Date(date.getTime() + <%= timeoutDelay %>).toLocaleString();
             addresses.forEach(async a => {
                 const b = document.getElementById(a + "_status");
                 if(!b) return;
@@ -34,7 +34,7 @@
                 await fetch('http://localhost:8080/ping/' + a)
                 .then((response) => response.json())
                 .then(async (data) => {
-                    b.innerHTML = data.alive ? '<span style="color:green;">UP (' + data.numeric_host + ") " + data.time + 'ms</span>' : '<span style="color:red;">DOWN' + ((data.host == "unknown") ? " (UNKNOWN HOST)" : (" (" + data.numeric_host + ")")) + " since " + new Date(Number((await (await fetch('http://localhost:8080/downtime/' + a)).json()).downSince)) + '</span>'
+                    b.innerHTML = data.alive ? '<span style="color:green;">UP (' + data.numeric_host + ") " + data.time + 'ms</span>' : '<span style="color:red;">DOWN' + ((data.host == "unknown") ? " (UNKNOWN HOST)" : (" (" + data.numeric_host + ")")) + " since " + new Date(Number((await (await fetch('http://localhost:8080/downtime/' + a)).json()).downSince)).toLocaleString() + '</span>'
                 });
             })
         setTimeout(aaa, <%= timeoutDelay %>)
