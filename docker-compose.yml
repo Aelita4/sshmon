@@ -3,40 +3,18 @@ services:
   app:
     container_name: sshmon_main
     restart: always
-    image: sshmon
+    image: sshmon:surreal
     ports:
       - "8080:8080"
-    depends_on:
-      - mysql
     networks:
       - network
-  mysql:
-    container_name: sshmon_mysql
+  surrealdb:
+    container_name: sshmon_surrealdb
     restart: always
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: 'root'
+    image: surrealdb/surrealdb:latest
+    command: start --user root --pass root memory
     ports:
-      - "3306:3306"
-    volumes:
-      - volume:/var/lib/mysql
-    networks:
-      - network
-    healthcheck:
-      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
-      interval: 2s
-      timeout: 20s
-      retries: 10
-  pma:
-    image: phpmyadmin/phpmyadmin
-    container_name: sshmon_pma
-    restart: always
-    environment:
-      - PMA_ARBITRARY=1
-    ports:
-      - "8081:80"
-    depends_on:
-      - mysql
+      - "8000:8000"
     networks:
       - network
 volumes:

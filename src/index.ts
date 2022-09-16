@@ -35,7 +35,7 @@ const getIP = () : Promise<string[]> => {
     });
 }
 
-const connection = new Surreal("http://127.0.0.1:8000/rpc");
+const connection = new Surreal("http://surrealdb:8000/rpc");
 
 await connection.signin({
     user: "root",
