@@ -1,9 +1,10 @@
-import express from 'express';
+import express, { NextFunction } from 'express';
 import Ping from 'ping';
 import { readdirSync } from 'fs';
 import sessions from "express-session"
 import cookieParser from "cookie-parser"
-import mysql from 'mysql'
+//@ts-ignore
+import Surreal from 'surrealdb.js'
 import bcrypt from 'bcrypt'
 import url from 'url';
 
@@ -19,23 +20,29 @@ const ping = async (host: string) => {
 
 const getIP = () : Promise<string[]> => {
     return new Promise((resolve, reject) => {
-        connection.query("SELECT * FROM ips", async (err, results, fields) => {
+        connection.query("SELECT * FROM ips").then((data : any) => {
+            const addresses = [...data[0].result.slice()].map(a => a.ip);
+            resolve(addresses);
+        }).catch((err : any) => {
+            reject(err);
+        });
+        /*connection.query("SELECT * FROM ips", async (err, results, fields) => {
             if(err) reject(err);
             const addresses = [...results.slice()].map(a => a.ip);
     
             resolve(addresses);
-        });
+        });*/
     });
 }
 
-const connection = mysql.createConnection({
-    host: "mysql",
+const connection = new Surreal("http://127.0.0.1:8000/rpc");
+
+await connection.signin({
     user: "root",
-    password: "root",
-    database: "sshmon"
+    pass: "root"
 });
 
-connection.connect();
+await connection.use("sshmon", "sshmon");
 
 const app = express();
 
@@ -65,6 +72,11 @@ routes.forEach(async route => {
         case "GET": app.get(file.default.url, file.default.callback.bind(null, { addresses, ping, pings, timeoutDelay })); break;
         case "POST": app.post(file.default.url, file.default.callback.bind(null, { addresses, ping, pings, timeoutDelay })); break;
     }
+});
+
+app.all("*", (req, res, next) => {
+    console.log(`${req.method} ${req.httpVersion} ${req.path}`);
+    next();
 });
 
 app.listen(8080, () => console.log('rdy'));

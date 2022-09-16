@@ -17,16 +17,23 @@ export default {
 
         const encryptedPassword = await bcrypt.hash(req.body.password, 10);
 
-        connection.query("SELECT * FROM users WHERE username = ?", req.body.username, (err, results, fields) => {
-            if(err) throw err;
-
-            if(results.length > 0) res.render("pages/register.ejs", { invalid: "exists" });
+        connection.query(`SELECT * FROM users WHERE username=$user`, {
+            user: req.body.username
+        })
+        .then((result: any) => {
+            if(result[0].result.length > 0) res.render("pages/register.ejs", { invalid: "exists" });
             else {
-                connection.query("INSERT INTO users VALUES (NULL, ?, ?)", [req.body.username, encryptedPassword], (errr, resultss, fieldss) => {
-                    if(errr) throw errr
+                connection.query("CREATE users SET username=$user, password=$pass", {
+                    user: req.body.username,
+                    pass: encryptedPassword
+                }).then((resultt: any) => {
                     res.render("pages/register.ejs", { invalid: "created" });
+                }).catch((err: any) => {
+                    throw err;
                 });
             }
+        }).catch((err: any) => {
+            throw err;
         });
     }
 }

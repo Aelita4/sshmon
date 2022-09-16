@@ -5,19 +5,25 @@ export default {
     method: "GET",
     url: "/removeIP/:ip",
     callback: async (data: any, req: Request, res: Response) => {
-        connection.query("SELECT * FROM ips WHERE ip = ?", req.params.ip, (err, results, fields) => {
-            if(err) throw err;
-
-            if(results.length == 0) {
+        connection.query("SELECT * FROM ips WHERE ip=$ip", {
+            ip: req.params.ip
+        })
+        .then((result: any) => {
+            if(result[0].result.length == 0) {
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ status: "OK" }));
             } else {
-                connection.query("DELETE FROM ips WHERE ip = ?", req.params.ip, (errr, resultss, fieldss) => {
-                    if(errr) throw errr
+                connection.query("DELETE ips WHERE ip=$ip", {
+                    ip: req.params.ip
+                }).then((resultt: any) => {
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify({ status: "OK" }));
+                }).catch((err: any) => {
+                    throw err;
                 });
             }
+        }).catch((err: any) => {
+            throw err;
         });
     }
 }
